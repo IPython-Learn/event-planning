@@ -1,8 +1,13 @@
 package com.visa.events.model;
 
+import com.visa.events.controller.validator.EventTypeConstraint;
+import com.visa.events.controller.validator.LocalDateConstraint;
 import com.visa.events.model.enums.EventType;
 
-import java.time.Instant;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -14,19 +19,31 @@ import java.util.Objects;
 public class EventDetails {
 
 
+    @NotEmpty(message = "{contactName.notempty}")
     private String contactName;
 
+    @NotEmpty(message = "{phone.notempty}")
     private String phone;
 
+    @Email(message = "{email.invalid}")
+    @NotNull(message = "{email.notempty}")
+    @NotEmpty(message = "{email.notempty}")
     private String email;
 
-    private EventType eventType;
+    @EventTypeConstraint
+    @NotEmpty(message = "{eventType.notempty}")
+    private String eventType;
 
+    @NotEmpty(message = "{city.notempty}")
     private String city;
 
-    private LocalDate date;
+    @LocalDateConstraint
+    @NotEmpty(message = "{date.invalid}")
+    private String date;
 
-    private int attendees;
+    @NotNull(message = "{attendees.notempty}")
+    @Min(value = 1, message = "{attendees.invalid}")
+    private Integer attendees;
 
 
     public String getContactName() {
@@ -54,10 +71,10 @@ public class EventDetails {
     }
 
     public EventType getEventType() {
-        return eventType;
+        return EventType.valueOf(eventType);
     }
 
-    public void setEventType(EventType eventType) {
+    public void setEventType(String eventType) {
         this.eventType = eventType;
     }
 
@@ -70,27 +87,31 @@ public class EventDetails {
     }
 
     public LocalDate getDate() {
-        return date;
+        return LocalDate.parse(date);
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
 
-    public int getAttendees() {
+    public Integer getAttendees() {
         return attendees;
     }
 
-    public void setAttendees(int attendees) {
+    public void setAttendees(Integer attendees) {
         this.attendees = attendees;
     }
 
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         EventDetails that = (EventDetails) o;
         return attendees == that.attendees &&
                 Objects.equals(contactName, that.contactName) &&

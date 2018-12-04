@@ -1,7 +1,7 @@
 logging:
   level:
     # Enabling trace for app specific logging.
-    org.springframework: INFO
+    org.springframework: DEBUG
 
 
 

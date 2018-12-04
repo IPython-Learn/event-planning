@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 /**
  * This {@link EstimationController} exposes Rest API to calculate event estimation
  *
@@ -29,7 +31,7 @@ public class EstimationController {
 
 
     @PostMapping("/estimate")
-    public ResponseEntity<Estimation> estimateEvent(@RequestBody EventDetails eventDetails) {
+    public ResponseEntity<Estimation> estimateEvent(@Valid @RequestBody EventDetails eventDetails) {
 
         LOGGER.info("Event details {}  ", eventDetails);
 

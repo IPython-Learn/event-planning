@@ -25,9 +25,10 @@ public class EventServiceImpl implements EventService {
     private WeatherService weatherService;
 
 
-    private List<String> holidayMonths = Arrays.asList("JANUARY", "NOVEMBER", "DECEMBER");
+    private final List<String> holidayMonths = Arrays.asList("JANUARY", "NOVEMBER", "DECEMBER");
 
 
+    @Override
     public Estimation calculateEstimation(EventDetails eventDetails) {
 
         LOGGER.info("Calculating estimation ");
@@ -59,13 +60,14 @@ public class EventServiceImpl implements EventService {
         }
 
 
-        LOGGER.info(" {}  contains {} ", holidayMonths, eventDetails.getDate().getMonth());
-        if (holidayMonths.contains(eventDetails.getDate().getMonth())) {
+        LOGGER.info("{}  contains {} ", holidayMonths, eventDetails.getDate().getMonth());
+        if (holidayMonths.contains(eventDetails.getDate().getMonth().toString())) {
             estimationAmount = estimationAmount.add(new BigDecimal(3000));
             estimation.setMonthsFlatFee(3000);
         }
 
         if (eventDetails.getEventType() == EventType.Musical) {
+            LOGGER.info("Applied musical discount ");
             estimationAmount = estimationAmount.subtract(new BigDecimal(1000));
             estimation.setMusicalEventDiscount(-1000);
         }
