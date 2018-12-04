@@ -1,0 +1,43 @@
+
+= Implement REST API ( use spring boot)
+
+== INPUT
+
+contact name, phone, email, event type, city, date, number of people
+
+== OUTPUT
+event planning estimate , referenceID
+
+
+=== Business Requirement
+
+CONDITION-1: head count
+
+. 0 - 100  ,  $2000 / per head
+
+. 100 - 500  , $1500/ per head
+
+. > 500, $1000 / per head
+
+
+CONDITION -2:
+
+weather condition rainy /cold  add $5000 flat fee, check yahoo weather API
+
+CONDITION -3:
+
+event in Jan, Nov, Dec  Flat fee $3000
+
+
+CONDITION- 4
+
+event types
+
+- Conference
+- Meeting
+- Musical
+- Family
+- Other
+
+Musical type $1000 discount should be applied
+

@@ -1,0 +1,24 @@
+logging:
+  level:
+    # Enabling trace for app specific logging.
+    org.springframework: INFO
+
+
+
+spring:
+  output:
+    ansi:
+      enabled: always
+
+
+
+estimationAttributes:
+  discountedEvent: Musical
+  flatFeeMonths:
+    - January
+    - November
+    - December
+  unconditalWeatherFee: 5000
+  monthFee: 3000
+  discountEventFee: 1000
+
