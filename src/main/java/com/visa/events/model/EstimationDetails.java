@@ -2,10 +2,10 @@ package com.visa.events.model;
 
 import com.visa.events.model.enums.EventType;
 
-import java.time.LocalDate;
+import java.io.Serializable;
 import java.util.Objects;
 
-public final class EstimationDetails {
+public final class EstimationDetails implements Serializable {
 
     public double baseEstimation;
 
@@ -23,7 +23,7 @@ public final class EstimationDetails {
 
     public String monthFeeReason;
 
-    public LocalDate eventDate;
+    public String eventDate;
 
     public String eventCity;
 
@@ -84,11 +84,11 @@ public final class EstimationDetails {
         this.discountedEvent = discountedEvent;
     }
 
-    public LocalDate getEventDate() {
+    public String getEventDate() {
         return eventDate;
     }
 
-    public void setEventDate(LocalDate eventDate) {
+    public void setEventDate(String eventDate) {
         this.eventDate = eventDate;
     }
 

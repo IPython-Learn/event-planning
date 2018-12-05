@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.format.DateTimeFormatter;
 import java.util.Random;
 
 /**
@@ -62,7 +63,7 @@ public class EventServiceImpl implements EventService {
 
         EstimationDetails estimationDetails = new EstimationDetails();
         estimationDetails.setEventCity(eventDetails.getCity());
-        estimationDetails.setEventDate(eventDetails.getDate());
+        estimationDetails.setEventDate(eventDetails.getDate().format(DateTimeFormatter.ISO_DATE));
 
         estimation.setEstimationDetails(estimationDetails);
 

@@ -17,7 +17,6 @@ public class WeatherData implements Serializable {
 
 
     public LocalDate getDate() {
-        System.out.println("Epoch  " + dt);
         return Instant.ofEpochSecond(dt).atZone(ZoneId.systemDefault()).toLocalDate();
     }
 

@@ -1,6 +1,8 @@
 package com.visa.events.model;
 
-public class Estimation {
+import java.io.Serializable;
+
+public class Estimation implements Serializable {
 
 
     public Estimation() {
