@@ -1,0 +1,152 @@
+
+= Event Planning
+
+This Rest API developed using spring boot
+
+It uses below weather API to read weather information(Max 5 days forecast for free apiKey)
+
+URL: http://api.openweathermap.org/data/2.5/forecast[]
+
+
+
+Ex: http://api.openweathermap.org/data/2.5/forecast?q=Pittsburgh&appid=58ec26e49239f1318e1161a774fb93ed[]
+
+
+== Source Code
+
+This application uses gradle to build the application.
+
+Used gradle wrapper to easily test in any machine.
+
+
+It has following important components
+
+1. WeatherClient to communicate with weather API
+2. InMemory Cache to save estimations which will be fetched later with referenceId
+3. Configuration externalized in `application.yml`
+4. Input Payload validator
+
+== REST API Endpoints
+
+=== Estimation Calculation
+
+`Calculating estimation based on input data`
+
+    URI: /event-planning/estimate[POST]
+
+
+[source]
+.payload.json
+----
+{
+	"email":"tvajjala@gmail.com",
+	"attendees":500,
+	"eventType":"Other",
+	"date":"2018-12-07",
+	"contactName":"Thiru",
+	"city":"Pittsburgh",
+	"phone":"5126989118"
+}
+----
+
+
+
+*CURL Command*
+
+
+[source,bash]
+.estimation_curl.sh
+----
+curl -X POST \
+  http://localhost:8080/event-planning/estimate \
+  -H 'cache-control: no-cache' \
+  -H 'content-type: application/json' \
+  -H 'postman-token: 0abfad3e-c237-f8f0-e7cc-f89333cac981' \
+  -d '{
+	"email":"tvajjala@gmail.com",
+	"attendees":500,
+	"eventType":"Other",
+	"date":"2018-12-07",
+	"contactName":"Thiru",
+	"city":"Pittsburgh",
+	"phone":"5126989118"
+}'
+----
+
+*Response*
+
+[source]
+.response.json
+----
+{
+    "referenceId": "57994063",
+    "estimation": 505000,
+    "estimationDetails": {
+        "baseEstimation": 500000,
+        "musicalEventDiscount": 0,
+        "discountedEvent": null,
+        "unconditionalWeatherFlatFee": 5000,
+        "weatherCondition": "Clouds",
+        "monthsFlatFee": 0,
+        "monthFeeReason": null,
+        "eventDate": "2018-12-07",
+        "eventCity": "Pittsburgh"
+    }
+}
+----
+
+
+
+
+
+=== Retrieve Estimation with ReferenceId
+`If you want to retrieve already estimated event with `referenceId``
+
+   URI: /event-planning/estimate/{referenceId}[GET]
+
+
+*CURL Command*
+
+[source,bash]
+.curl.sh
+----
+curl -X GET \
+  http://localhost:8080/event-planning/estimate/57994063 \
+  -H 'cache-control: no-cache' \
+  -H 'content-type: application/json'
+----
+
+
+*Response*
+
+
+[source]
+.response.json
+----
+{
+    "referenceId": "57994063",
+    "estimation": 505000,
+    "estimationDetails": {
+        "baseEstimation": 500000,
+        "musicalEventDiscount": 0,
+        "discountedEvent": null,
+        "unconditionalWeatherFlatFee": 5000,
+        "weatherCondition": "Clouds",
+        "monthsFlatFee": 0,
+        "monthFeeReason": null,
+        "eventDate": "2018-12-07",
+        "eventCity": "Pittsburgh"
+    }
+}
+----
+
+
+
+
+
+
+
+
+
+
+

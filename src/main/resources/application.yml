@@ -1,15 +1,13 @@
 logging:
   level:
     # Enabling trace for app specific logging.
-    org.springframework: DEBUG
-
+    org.springframework: INFO
 
 
 spring:
   output:
     ansi:
       enabled: always
-
 
 
 estimationAttributes:
@@ -22,3 +20,17 @@ estimationAttributes:
   monthFee: 3000
   discountEventFee: 1000
 
+events:
+  weather:
+    apiKey: 58ec26e49239f1318e1161a774fb93ed
+    url: http://api.openweathermap.org/data/2.5/forecast
+  estimation:
+    discountedEvent:
+      - Musical
+    flatFeeMonths:
+      - JANUARY
+      - November
+      - December
+    unconditalWeatherFlatFee: 5000
+    monthFlatFee: 3000
+    eventDiscount: 1000

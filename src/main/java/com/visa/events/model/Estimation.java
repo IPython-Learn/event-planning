@@ -13,15 +13,18 @@ public class Estimation {
 
     private String referenceId;
 
+
     public double estimation;
 
-    public double unconditionalWeatherFlatFee;
+    public EstimationDetails estimationDetails;
 
-    public double monthsFlatFee;
+    public EstimationDetails getEstimationDetails() {
+        return estimationDetails;
+    }
 
-    public double musicalEventDiscount;
-
-    public double finalEstimation;
+    public void setEstimationDetails(EstimationDetails estimationDetails) {
+        this.estimationDetails = estimationDetails;
+    }
 
     public String getReferenceId() {
         return referenceId;
@@ -41,35 +44,7 @@ public class Estimation {
     }
 
 
-    public double getUnconditionalWeatherFlatFee() {
-        return unconditionalWeatherFlatFee;
-    }
-
-    public void setUnconditionalWeatherFlatFee(double unconditionalWeatherFlatFee) {
-        this.unconditionalWeatherFlatFee = unconditionalWeatherFlatFee;
-    }
-
-    public double getMonthsFlatFee() {
-        return monthsFlatFee;
-    }
-
-    public void setMonthsFlatFee(double monthsFlatFee) {
-        this.monthsFlatFee = monthsFlatFee;
-    }
-
-    public double getMusicalEventDiscount() {
-        return musicalEventDiscount;
-    }
-
-    public void setMusicalEventDiscount(double musicalEventDiscount) {
-        this.musicalEventDiscount = musicalEventDiscount;
-    }
-
-    public double getFinalEstimation() {
-        return finalEstimation;
-    }
-
-    public void setFinalEstimation(double finalEstimation) {
-        this.finalEstimation = finalEstimation;
-    }
 }
+
+
+

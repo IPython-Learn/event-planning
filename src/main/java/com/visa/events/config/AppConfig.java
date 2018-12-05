@@ -1,24 +1,15 @@
 package com.visa.events.config;
 
 
-import org.springframework.boot.autoconfigure.http.HttpProperties;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.http.HttpStatus;
-import org.springframework.validation.ObjectError;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import sun.plugin2.message.Message;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.web.client.RestTemplate;
 
 /**
- * Customization configuration can be available here
+ * App configuration customization can be available here
  *
  * @author ThirupathiReddy Vajjala
  */
@@ -52,6 +43,13 @@ public class AppConfig {
         return factoryBean;
     }
 
+    /**
+     * @return restTemplate
+     */
+    @Bean
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 
 
 }
