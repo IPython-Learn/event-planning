@@ -23,7 +23,11 @@ public class LocalDateValidator implements ConstraintValidator<LocalDateConstrai
     public boolean isValid(String value, ConstraintValidatorContext context) {
         try {
             LOGGER.info("Received LocalDate {} ", value);
-            return LocalDate.parse(value).isAfter(LocalDate.now());
+
+            LocalDate input = LocalDate.parse(value);
+
+            //return true if it is today date or future date
+            return input.isAfter(LocalDate.now()) || input.isEqual(LocalDate.now());
         } catch (Exception e) {
             //ignore
         }

@@ -10,16 +10,6 @@ spring:
       enabled: always
 
 
-estimationAttributes:
-  discountedEvent: Musical
-  flatFeeMonths:
-    - January
-    - November
-    - December
-  unconditalWeatherFee: 5000
-  monthFee: 3000
-  discountEventFee: 1000
-
 events:
   weather:
     apiKey: 58ec26e49239f1318e1161a774fb93ed
@@ -29,8 +19,8 @@ events:
       - Musical
     flatFeeMonths:
       - JANUARY
-      - November
-      - December
+      - NOVEMBER
+      - DECEMBER
     unconditalWeatherFlatFee: 5000
     monthFlatFee: 3000
     eventDiscount: 1000

@@ -71,6 +71,9 @@ public class EventDetails {
     }
 
     public EventType getEventType() {
+        if (eventType == null) {
+            return EventType.Other;
+        }
         return EventType.valueOf(eventType);
     }
 
@@ -86,7 +89,15 @@ public class EventDetails {
         this.city = city;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
+        return date;
+    }
+
+    public LocalDate getLocalDate() {
+        if (date == null) {
+            return LocalDate.now();
+        }
+
         return LocalDate.parse(date);
     }
 

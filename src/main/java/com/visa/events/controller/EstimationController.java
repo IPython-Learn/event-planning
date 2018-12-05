@@ -37,6 +37,12 @@ public class EstimationController {
 
     @GetMapping("/estimate/{referenceId}")
     public ResponseEntity<Estimation> estimationByReferenceId(@PathVariable("referenceId") String referenceId) {
+        Estimation estimation = eventService.getEstimationByReferenceId(referenceId);
+
+        if (estimation == null) {
+            LOGGER.warn("No Record found with referenceId {} ", referenceId);
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(eventService.getEstimationByReferenceId(referenceId));
     }
 

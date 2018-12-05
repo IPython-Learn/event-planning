@@ -1,6 +1,7 @@
 package com.visa.events.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Estimation implements Serializable {
 
@@ -16,7 +17,7 @@ public class Estimation implements Serializable {
     private String referenceId;
 
 
-    public double estimation;
+    public double totalEstimation;
 
     public EstimationDetails estimationDetails;
 
@@ -36,16 +37,43 @@ public class Estimation implements Serializable {
         this.referenceId = referenceId;
     }
 
-
-    public double getEstimation() {
-        return estimation;
+    public double getTotalEstimation() {
+        return totalEstimation;
     }
 
-    public void setEstimation(double estimation) {
-        this.estimation = estimation;
+    public void setTotalEstimation(double totalEstimation) {
+        this.totalEstimation = totalEstimation;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Estimation)) {
+            return false;
+        }
+        Estimation that = (Estimation) o;
+        return Double.compare(that.totalEstimation, totalEstimation) == 0 &&
+                Objects.equals(referenceId, that.referenceId) &&
+                Objects.equals(estimationDetails, that.estimationDetails);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(referenceId, totalEstimation, estimationDetails);
     }
 
 
+    @Override
+    public String toString() {
+        return "Estimation{" +
+                "referenceId='" + referenceId + '\'' +
+                ", totalEstimation=" + totalEstimation +
+                ", estimationDetails=" + estimationDetails +
+                '}';
+    }
 }
 
 

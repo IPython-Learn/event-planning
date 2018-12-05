@@ -1,5 +1,7 @@
 package com.visa.events;
 
+import com.visa.events.cache.EventCache;
+import com.visa.events.model.Estimation;
 import com.visa.events.model.EventDetails;
 import org.junit.Assert;
 import org.junit.Test;
@@ -8,10 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * Integration tests controller layers by loading spring container
+ *
+ * @author ThirupathiReddy Vajjala
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class EventPlanningApplicationTests {
@@ -21,36 +32,110 @@ public class EventPlanningApplicationTests {
     private int port;
 
     @Autowired
-    private TestRestTemplate restTemplate;
+    EventCache eventCache;
 
+
+    TestRestTemplate testRestTemplate = new TestRestTemplate();
+
+
+    /**
+     * Should returns 200 OK , when all the required input fields passed
+     */
     @Test
-    public void calculateEstimation() {
+    public void calculateEstimationTest() {
 
         EventDetails eventDetails = new EventDetails();
         eventDetails.setAttendees(100);
         eventDetails.setCity("Pittsburgh");
         eventDetails.setContactName("Thiru");
-        eventDetails.setDate("2018-12-06");
+        eventDetails.setDate(LocalDate.now().format(DateTimeFormatter.ISO_DATE));// validation fails if supply past
+        // dates
         eventDetails.setEmail("tvajjala@gmail.com");
         eventDetails.setPhone("90000000");
         eventDetails.setEventType("Other");
 
-        ResponseEntity<String> responseEntity = restTemplate.postForEntity("http://localhost:" + port +
-                "/event-planning/estimate", eventDetails, String.class);
 
+        String URI = "http://localhost:" + port + "/event-planning/estimate";
+
+        HttpEntity<EventDetails> httpEntity = new HttpEntity<>(eventDetails, headers());
+
+        ResponseEntity<Estimation> responseEntity = testRestTemplate.exchange(URI, HttpMethod.POST, httpEntity,
+                Estimation.class);
 
         Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 
-        Assert.assertEquals(responseEntity.getBody(), "");
-
-        //String refId = responseEntity.getBody().getReferenceId();
-/*
-        ResponseEntity<Estimation> responseEntity1 = restTemplate.getForEntity("http://localhost:" + port +
-                "/event-planning/estimate/" + refId, Estimation.class);
-
-        Assert.assertEquals(responseEntity.getBody(), responseEntity1.getBody());*/
+        Assert.assertNotNull(responseEntity.getBody().getReferenceId());
 
     }
 
+    /**
+     * Should returns 400 BadRequest when the required fields not available in the payload
+     */
+    @Test
+    public void calculateEstimationValidationTest() {
+
+        EventDetails eventDetails = new EventDetails();
+        HttpHeaders headers = headers();
+
+        String URI = "http://localhost:" + port + "/event-planning/estimate";
+
+        HttpEntity<EventDetails> httpEntity = new HttpEntity<>(eventDetails, headers);
+
+        ResponseEntity<String> responseEntity = testRestTemplate.exchange(URI, HttpMethod.POST, httpEntity,
+                String.class);
+
+        Assert.assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+
+
+    }
+
+
+    /**
+     * Should returns 404 RecordNotFound when given referenceId not found in the cache
+     */
+    @Test
+    public void recordNotFoundTest() {
+
+        HttpHeaders headers = headers();
+        String URI = "http://localhost:" + port + "/event-planning/estimate/1";
+        HttpEntity<EventDetails> httpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> responseEntity = testRestTemplate.exchange(URI, HttpMethod.GET, httpEntity,
+                String.class);
+
+        Assert.assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+
+    }
+
+    /**
+     * Should return estimation from the cache
+     */
+    @Test
+    public void shouldReturnEstimationFromCacheTest() {
+
+        eventCache.put("144995582", new Estimation());
+        HttpHeaders headers = headers();
+        String URI = "http://localhost:" + port + "/event-planning/estimate/144995582";
+
+        HttpEntity<EventDetails> httpEntity = new HttpEntity<>(headers);
+
+        ResponseEntity<String> responseEntity = testRestTemplate.exchange(URI, HttpMethod.GET, httpEntity,
+                String.class);
+
+        Assert.assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+
+    }
+
+
+    public static HttpHeaders headers() {
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        List<MediaType> acceptableMediaTypes = Arrays.asList(MediaType.APPLICATION_JSON);
+        headers.setAccept(acceptableMediaTypes);
+
+        return headers;
+
+    }
 
 }

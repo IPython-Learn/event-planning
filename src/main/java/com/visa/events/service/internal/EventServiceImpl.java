@@ -28,13 +28,19 @@ public class EventServiceImpl implements EventService {
     private static final Logger LOGGER = LoggerFactory.getLogger(EventServiceImpl.class);
 
 
-    @Autowired
-    private WeatherClient weatherClient;
+    private final WeatherClient weatherClient;
+
+    private final EstimationConfig estimationConfig;
+
+    private final EventCache eventCache;
+
 
     @Autowired
-    private EstimationConfig estimationConfig;
-
-    EventCache eventCache = EventCache.getInstance();
+    public EventServiceImpl(WeatherClient weatherClient, EventCache eventCache, EstimationConfig estimationConfig) {
+        this.weatherClient = weatherClient;
+        this.eventCache = eventCache;
+        this.estimationConfig = estimationConfig;
+    }
 
 
     @Override
@@ -63,14 +69,14 @@ public class EventServiceImpl implements EventService {
 
         EstimationDetails estimationDetails = new EstimationDetails();
         estimationDetails.setEventCity(eventDetails.getCity());
-        estimationDetails.setEventDate(eventDetails.getDate().format(DateTimeFormatter.ISO_DATE));
+        estimationDetails.setEventDate(eventDetails.getLocalDate().format(DateTimeFormatter.ISO_DATE));
 
         estimation.setEstimationDetails(estimationDetails);
 
         LOGGER.info("BaseEstimation {} ", estimationAmount.doubleValue());
         estimationDetails.setBaseEstimation(estimationAmount.doubleValue());
 
-        String condition = weatherClient.getWeatherCondition(eventDetails.getDate(), eventDetails.getCity());
+        String condition = weatherClient.getWeatherCondition(eventDetails.getLocalDate(), eventDetails.getCity());
 
         if (!"Clear".equalsIgnoreCase(condition)) {
             LOGGER.info("Weather condition is not good ");
@@ -81,11 +87,11 @@ public class EventServiceImpl implements EventService {
         }
 
 
-        if (estimationConfig.getFlatFeeMonths().contains(eventDetails.getDate().getMonth().toString())) {
+        if (estimationConfig.getFlatFeeMonths().contains(eventDetails.getLocalDate().getMonth().toString())) {
             estimationAmount = estimationAmount.add(new BigDecimal(estimationConfig.getMonthFlatFee()));
             estimationDetails.setMonthsFlatFee(estimationConfig.getMonthFlatFee());
-            estimationDetails.setMonthFeeReason(eventDetails.getDate().getMonth().toString());
-            LOGGER.info("Month FlatFee applied for month {} ", eventDetails.getDate().getMonth());
+            estimationDetails.setMonthFeeReason(eventDetails.getLocalDate().getMonth().toString());
+            LOGGER.info("Month FlatFee applied for month {} ", eventDetails.getLocalDate().getMonth());
         }
 
         if (estimationConfig.getDiscountedEvent().contains(eventDetails.getEventType().name())) {
@@ -96,8 +102,8 @@ public class EventServiceImpl implements EventService {
         }
 
 
-        LOGGER.info("Final estimation {}", estimation.getEstimation());
-        estimation.setEstimation(estimationAmount.doubleValue());
+        estimation.setTotalEstimation(estimationAmount.doubleValue());
+        LOGGER.info("Final estimation {}", estimation.getTotalEstimation());
 
         eventCache.put(referenceId, estimation);
 
