@@ -4,6 +4,7 @@ import com.visa.events.cache.EventCache;
 import com.visa.events.model.Estimation;
 import com.visa.events.model.EventDetails;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,14 @@ public class EventPlanningApplicationTests {
     TestRestTemplate testRestTemplate = new TestRestTemplate();
 
 
+    String baseUrl;
+
+    @Before
+    public void init() {
+
+        baseUrl = "http://localhost:" + port + "/event-planning";
+    }
+
     /**
      * Should returns 200 OK , when all the required input fields passed
      */
@@ -55,7 +64,7 @@ public class EventPlanningApplicationTests {
         eventDetails.setEventType("Other");
 
 
-        String URI = "http://localhost:" + port + "/event-planning/estimate";
+        String URI = baseUrl + "/estimate";
 
         HttpEntity<EventDetails> httpEntity = new HttpEntity<>(eventDetails, headers());
 
@@ -76,7 +85,7 @@ public class EventPlanningApplicationTests {
 
         EventDetails eventDetails = new EventDetails();
 
-        String URI = "http://localhost:" + port + "/event-planning/estimate";
+        String URI = baseUrl + "/estimate";
 
         HttpEntity<EventDetails> httpEntity = new HttpEntity<>(eventDetails, headers());
 
@@ -95,7 +104,7 @@ public class EventPlanningApplicationTests {
     @Test
     public void recordNotFoundTest() {
 
-        String URI = "http://localhost:" + port + "/event-planning/estimate/1";
+        String URI = baseUrl + "/estimate/1";
         HttpEntity<EventDetails> httpEntity = new HttpEntity<>(headers());
 
         ResponseEntity<String> responseEntity = testRestTemplate.exchange(URI, HttpMethod.GET, httpEntity,
@@ -112,7 +121,7 @@ public class EventPlanningApplicationTests {
     public void shouldReturnEstimationFromCacheTest() {
 
         eventCache.put("144995582", new Estimation());
-        String URI = "http://localhost:" + port + "/event-planning/estimate/144995582";
+        String URI = baseUrl + "/estimate/144995582";
 
         HttpEntity<EventDetails> httpEntity = new HttpEntity<>(headers());
 

@@ -8,6 +8,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Objects;
 
@@ -16,7 +17,7 @@ import java.util.Objects;
  *
  * @author ThirupathiReddy Vajjala
  */
-public class EventDetails {
+public class EventDetails implements Serializable {
 
 
     @NotEmpty(message = "{contactName.notempty}")
