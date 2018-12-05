@@ -8,7 +8,6 @@ It uses below weather API to read weather information(Max 5 days forecast for fr
 URL: http://api.openweathermap.org/data/2.5/forecast[]
 
 
-
 Ex: http://api.openweathermap.org/data/2.5/forecast?q=Pittsburgh&appid=58ec26e49239f1318e1161a774fb93ed[]
 
 
@@ -41,7 +40,7 @@ It has following important components
 {
 	"email":"tvajjala@gmail.com",
 	"attendees":500,
-	"eventType":"Other",
+	"eventType":"Musical",
 	"date":"2018-12-07",
 	"contactName":"Thiru",
 	"city":"Pittsburgh",
@@ -61,11 +60,11 @@ curl -X POST \
   http://localhost:8080/event-planning/estimate \
   -H 'cache-control: no-cache' \
   -H 'content-type: application/json' \
-  -H 'postman-token: 0abfad3e-c237-f8f0-e7cc-f89333cac981' \
+  -H 'postman-token: cf62d43d-4d44-6a34-f4ad-61f1cacf77a0' \
   -d '{
 	"email":"tvajjala@gmail.com",
 	"attendees":500,
-	"eventType":"Other",
+	"eventType":"Musical",
 	"date":"2018-12-07",
 	"contactName":"Thiru",
 	"city":"Pittsburgh",
@@ -79,18 +78,26 @@ curl -X POST \
 .response.json
 ----
 {
-    "referenceId": "57994063",
-    "estimation": 505000,
+    "referenceId": "16013319",
+    "totalEstimation": 507000,
     "estimationDetails": {
         "baseEstimation": 500000,
-        "musicalEventDiscount": 0,
-        "discountedEvent": null,
+        "musicalEventDiscount": -1000,
+        "discountedEvent": "Musical",
         "unconditionalWeatherFlatFee": 5000,
-        "weatherCondition": "Clouds",
-        "monthsFlatFee": 0,
-        "monthFeeReason": null,
-        "eventDate": "2018-12-07",
-        "eventCity": "Pittsburgh"
+        "weatherCondition": "Snow",
+        "monthsFlatFee": 3000,
+        "monthFeeReason": "DECEMBER",
+        "estimationFor": {
+            "contactName": "Thiru",
+            "phone": "5126989118",
+            "email": "tvajjala@gmail.com",
+            "eventType": "Musical",
+            "city": "Pittsburgh",
+            "date": "2018-12-07",
+            "attendees": 500,
+            "localDate": "2018-12-07"
+        }
     }
 }
 ----
@@ -111,7 +118,7 @@ curl -X POST \
 .curl.sh
 ----
 curl -X GET \
-  http://localhost:8080/event-planning/estimate/57994063 \
+  http://localhost:8080/event-planning/estimate/16013319 \
   -H 'cache-control: no-cache' \
   -H 'content-type: application/json'
 ----
@@ -124,23 +131,57 @@ curl -X GET \
 .response.json
 ----
 {
-    "referenceId": "57994063",
-    "estimation": 505000,
+    "referenceId": "16013319",
+    "totalEstimation": 507000,
     "estimationDetails": {
         "baseEstimation": 500000,
-        "musicalEventDiscount": 0,
-        "discountedEvent": null,
+        "musicalEventDiscount": -1000,
+        "discountedEvent": "Musical",
         "unconditionalWeatherFlatFee": 5000,
-        "weatherCondition": "Clouds",
-        "monthsFlatFee": 0,
-        "monthFeeReason": null,
-        "eventDate": "2018-12-07",
-        "eventCity": "Pittsburgh"
+        "weatherCondition": "Snow",
+        "monthsFlatFee": 3000,
+        "monthFeeReason": "DECEMBER",
+        "estimationFor": {
+            "contactName": "Thiru",
+            "phone": "5126989118",
+            "email": "tvajjala@gmail.com",
+            "eventType": "Musical",
+            "city": "Pittsburgh",
+            "date": "2018-12-07",
+            "attendees": 500,
+            "localDate": "2018-12-07"
+        }
     }
 }
 ----
 
 
+=== Testing
+
+
+It contains following test cases
+
+. Service layer tests `EventServiceImplTest`
+
+. Integration tests `EventPlanningApplicationTests`
+
+. Client layer test `WeatherClient`
+
+
+=== Running the application
+
+
+[source,bash]
+.run.sh
+----
+# Running the test cases from terminal
+
+./gradlew clean build test
+
+# Running the application from terminal
+
+./gradlew bootRun
+----
 
 
 

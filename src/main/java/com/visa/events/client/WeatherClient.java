@@ -28,12 +28,17 @@ public class WeatherClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(WeatherClient.class);
 
 
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
+
+
+    private final WeatherConfig weatherConfig;
 
 
     @Autowired
-    private WeatherConfig weatherConfig;
+    public WeatherClient(RestTemplate restTemplate, WeatherConfig weatherConfig) {
+        this.restTemplate = restTemplate;
+        this.weatherConfig = weatherConfig;
+    }
 
 
     /**
@@ -53,7 +58,7 @@ public class WeatherClient {
             ResponseEntity<WeatherResponse> responseEntity = restTemplate.getForEntity(URL, WeatherResponse.class);
 
 
-            WeatherResponse weatherResponse = responseEntity.getBody();//TODO: revisit
+            WeatherResponse weatherResponse = responseEntity.getBody();
 
             if (responseEntity.getStatusCode() != HttpStatus.OK || !(weatherResponse.getCod().equals("200") &&
                     weatherResponse.getCity().getName().equalsIgnoreCase(city))) {
@@ -87,8 +92,8 @@ public class WeatherClient {
             return weatherOnDay.get(0).getMain();
 
         } catch (Exception e) {
-            
-            return "Invalid city information provided";
+            LOGGER.error("Something went wrong ", e);
+            return "Invalid City information provided";
         }
     }
 

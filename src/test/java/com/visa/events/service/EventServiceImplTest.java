@@ -67,7 +67,7 @@ public class EventServiceImplTest {
 
         Assert.assertEquals(152000, estimation.getTotalEstimation(), 0.2);
 
-        Assert.assertEquals("Pittsburgh", estimation.getEstimationDetails().getEventCity());
+        Assert.assertEquals("Pittsburgh", estimation.getEstimationDetails().getEstimationFor().getCity());
     }
 
 
@@ -80,6 +80,6 @@ public class EventServiceImplTest {
         Assert.assertNotNull(estimation);
 
     }
-    
+
 
 }

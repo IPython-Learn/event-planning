@@ -28,7 +28,11 @@ public class EventCache {
 
         if (INSTANCE == null) {
             lock.lock();
-            INSTANCE = new EventCache();
+
+            if (INSTANCE == null) {
+                INSTANCE = new EventCache();
+            }
+
             lock.unlock();
         }
 

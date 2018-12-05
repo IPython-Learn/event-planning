@@ -23,9 +23,8 @@ public final class EstimationDetails implements Serializable {
 
     public String monthFeeReason;
 
-    public String eventDate;
 
-    public String eventCity;
+    public EventDetails estimationFor;
 
 
     public double getUnconditionalWeatherFlatFee() {
@@ -84,22 +83,13 @@ public final class EstimationDetails implements Serializable {
         this.discountedEvent = discountedEvent;
     }
 
-    public String getEventDate() {
-        return eventDate;
+    public EventDetails getEstimationFor() {
+        return estimationFor;
     }
 
-    public void setEventDate(String eventDate) {
-        this.eventDate = eventDate;
+    public void setEstimationFor(EventDetails estimationFor) {
+        this.estimationFor = estimationFor;
     }
-
-    public String getEventCity() {
-        return eventCity;
-    }
-
-    public void setEventCity(String eventCity) {
-        this.eventCity = eventCity;
-    }
-
 
     @Override
     public boolean equals(Object o) {
@@ -116,16 +106,14 @@ public final class EstimationDetails implements Serializable {
                 Double.compare(that.monthsFlatFee, monthsFlatFee) == 0 &&
                 discountedEvent == that.discountedEvent &&
                 Objects.equals(weatherCondition, that.weatherCondition) &&
-                Objects.equals(monthFeeReason, that.monthFeeReason) &&
-                Objects.equals(eventDate, that.eventDate) &&
-                Objects.equals(eventCity, that.eventCity);
+                Objects.equals(monthFeeReason, that.monthFeeReason);
     }
 
     @Override
     public int hashCode() {
 
         return Objects.hash(baseEstimation, musicalEventDiscount, discountedEvent, unconditionalWeatherFlatFee,
-                weatherCondition, monthsFlatFee, monthFeeReason, eventDate, eventCity);
+                weatherCondition, monthsFlatFee, monthFeeReason);
     }
 
     @Override
@@ -138,8 +126,6 @@ public final class EstimationDetails implements Serializable {
                 ", weatherCondition='" + weatherCondition + '\'' +
                 ", monthsFlatFee=" + monthsFlatFee +
                 ", monthFeeReason='" + monthFeeReason + '\'' +
-                ", eventDate=" + eventDate +
-                ", eventCity='" + eventCity + '\'' +
                 '}';
     }
 }

@@ -75,11 +75,10 @@ public class EventPlanningApplicationTests {
     public void calculateEstimationValidationTest() {
 
         EventDetails eventDetails = new EventDetails();
-        HttpHeaders headers = headers();
 
         String URI = "http://localhost:" + port + "/event-planning/estimate";
 
-        HttpEntity<EventDetails> httpEntity = new HttpEntity<>(eventDetails, headers);
+        HttpEntity<EventDetails> httpEntity = new HttpEntity<>(eventDetails, headers());
 
         ResponseEntity<String> responseEntity = testRestTemplate.exchange(URI, HttpMethod.POST, httpEntity,
                 String.class);
@@ -96,9 +95,8 @@ public class EventPlanningApplicationTests {
     @Test
     public void recordNotFoundTest() {
 
-        HttpHeaders headers = headers();
         String URI = "http://localhost:" + port + "/event-planning/estimate/1";
-        HttpEntity<EventDetails> httpEntity = new HttpEntity<>(headers);
+        HttpEntity<EventDetails> httpEntity = new HttpEntity<>(headers());
 
         ResponseEntity<String> responseEntity = testRestTemplate.exchange(URI, HttpMethod.GET, httpEntity,
                 String.class);
@@ -114,10 +112,9 @@ public class EventPlanningApplicationTests {
     public void shouldReturnEstimationFromCacheTest() {
 
         eventCache.put("144995582", new Estimation());
-        HttpHeaders headers = headers();
         String URI = "http://localhost:" + port + "/event-planning/estimate/144995582";
 
-        HttpEntity<EventDetails> httpEntity = new HttpEntity<>(headers);
+        HttpEntity<EventDetails> httpEntity = new HttpEntity<>(headers());
 
         ResponseEntity<String> responseEntity = testRestTemplate.exchange(URI, HttpMethod.GET, httpEntity,
                 String.class);

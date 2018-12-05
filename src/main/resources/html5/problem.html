@@ -5,7 +5,7 @@
 <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge"><![endif]-->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="generator" content="Asciidoctor 1.5.3">
-<title>Event Planning</title>
+<title>Implement REST API ( use spring boot)</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:300,300italic,400,400italic,600,600italic%7CNoto+Serif:400,400italic,700,700italic%7CDroid+Sans+Mono:400,700">
 <style>
 /* Asciidoctor default stylesheet | MIT License | http://asciidoctor.org */
@@ -510,222 +510,80 @@ table.CodeRay td.code>pre{padding:0}
 </head>
 <body class="article">
 <div id="header">
-<h1>Event Planning</h1>
+<h1>Implement REST API ( use spring boot)</h1>
 </div>
 <div id="content">
-<div id="preamble">
+<div class="sect1">
+<h2 id="input">INPUT</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This Rest API developed using spring boot</p>
-</div>
-<div class="paragraph">
-<p>It uses below weather API to read weather information(Max 5 days forecast for free apiKey)</p>
-</div>
-<div class="paragraph">
-<p>URL: <a href="http://api.openweathermap.org/data/2.5/forecast" class="bare">http://api.openweathermap.org/data/2.5/forecast</a></p>
-</div>
-<div class="paragraph">
-<p>Ex: <a href="http://api.openweathermap.org/data/2.5/forecast?q=Pittsburgh&amp;appid=58ec26e49239f1318e1161a774fb93ed" class="bare">http://api.openweathermap.org/data/2.5/forecast?q=Pittsburgh&amp;appid=58ec26e49239f1318e1161a774fb93ed</a></p>
+<p>contact name, phone, email, event type, city, date, number of people</p>
 </div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="source-code">Source Code</h2>
+<h2 id="output">OUTPUT</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This application uses gradle to build the application.</p>
+<p>event planning estimate , referenceID</p>
 </div>
+<div class="sect2">
+<h3 id="business-requirement">Business Requirement</h3>
 <div class="paragraph">
-<p>Used gradle wrapper to easily test in any machine.</p>
-</div>
-<div class="paragraph">
-<p>It has following important components</p>
+<p>CONDITION-1: head count</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>WeatherClient to communicate with weather API</p>
+<p>0 - 100  ,  $2000 / per head</p>
 </li>
 <li>
-<p>InMemory Cache to save estimations which will be fetched later with referenceId</p>
+<p>100 - 500  , $1500/ per head</p>
 </li>
 <li>
-<p>Configuration externalized in <code>application.yml</code></p>
-</li>
-<li>
-<p>Input Payload validator</p>
+<p>&gt; 500, $1000 / per head</p>
 </li>
 </ol>
 </div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="rest-api-endpoints">REST API Endpoints</h2>
-<div class="sectionbody">
-<div class="sect2">
-<h3 id="estimation-calculation">Estimation Calculation</h3>
 <div class="paragraph">
-<p><code>Calculating estimation based on input data</code></p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>URI: /event-planning/estimate[POST]</pre>
-</div>
-</div>
-<div class="listingblock">
-<div class="title">payload.json</div>
-<div class="content">
-<pre class="CodeRay highlight"><code>{
-	"email":"tvajjala@gmail.com",
-	"attendees":500,
-	"eventType":"Musical",
-	"date":"2018-12-07",
-	"contactName":"Thiru",
-	"city":"Pittsburgh",
-	"phone":"5126989118"
-}</code></pre>
-</div>
+<p>CONDITION -2:</p>
 </div>
 <div class="paragraph">
-<p><strong>CURL Command</strong></p>
-</div>
-<div class="listingblock">
-<div class="title">estimation_curl.sh</div>
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">curl -X POST \
-  http://localhost:8080/event-planning/estimate \
-  -H 'cache-control: no-cache' \
-  -H 'content-type: application/json' \
-  -H 'postman-token: cf62d43d-4d44-6a34-f4ad-61f1cacf77a0' \
-  -d '{
-        &quot;email&quot;:&quot;tvajjala@gmail.com&quot;,
-        &quot;attendees&quot;:500,
-        &quot;eventType&quot;:&quot;Musical&quot;,
-        &quot;date&quot;:&quot;2018-12-07&quot;,
-        &quot;contactName&quot;:&quot;Thiru&quot;,
-        &quot;city&quot;:&quot;Pittsburgh&quot;,
-        &quot;phone&quot;:&quot;5126989118&quot;
-}'</code></pre>
-</div>
+<p>weather condition rainy /cold  add $5000 flat fee, check yahoo weather API</p>
 </div>
 <div class="paragraph">
-<p><strong>Response</strong></p>
-</div>
-<div class="listingblock">
-<div class="title">response.json</div>
-<div class="content">
-<pre class="CodeRay highlight"><code>{
-    "referenceId": "16013319",
-    "totalEstimation": 507000,
-    "estimationDetails": {
-        "baseEstimation": 500000,
-        "musicalEventDiscount": -1000,
-        "discountedEvent": "Musical",
-        "unconditionalWeatherFlatFee": 5000,
-        "weatherCondition": "Snow",
-        "monthsFlatFee": 3000,
-        "monthFeeReason": "DECEMBER",
-        "estimationFor": {
-            "contactName": "Thiru",
-            "phone": "5126989118",
-            "email": "tvajjala@gmail.com",
-            "eventType": "Musical",
-            "city": "Pittsburgh",
-            "date": "2018-12-07",
-            "attendees": 500,
-            "localDate": "2018-12-07"
-        }
-    }
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="retrieve-estimation-with-referenceid">Retrieve Estimation with ReferenceId</h3>
-<div class="paragraph">
-<p><code>If you want to retrieve already estimated event with `referenceId`</code></p>
-</div>
-<div class="literalblock">
-<div class="content">
-<pre>URI: /event-planning/estimate/{referenceId}[GET]</pre>
-</div>
+<p>CONDITION -3:</p>
 </div>
 <div class="paragraph">
-<p><strong>CURL Command</strong></p>
-</div>
-<div class="listingblock">
-<div class="title">curl.sh</div>
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">curl -X GET \
-  http://localhost:8080/event-planning/estimate/16013319 \
-  -H 'cache-control: no-cache' \
-  -H 'content-type: application/json'</code></pre>
-</div>
+<p>event in Jan, Nov, Dec  Flat fee $3000</p>
 </div>
 <div class="paragraph">
-<p><strong>Response</strong></p>
+<p>CONDITION- 4</p>
 </div>
-<div class="listingblock">
-<div class="title">response.json</div>
-<div class="content">
-<pre class="CodeRay highlight"><code>{
-    "referenceId": "16013319",
-    "totalEstimation": 507000,
-    "estimationDetails": {
-        "baseEstimation": 500000,
-        "musicalEventDiscount": -1000,
-        "discountedEvent": "Musical",
-        "unconditionalWeatherFlatFee": 5000,
-        "weatherCondition": "Snow",
-        "monthsFlatFee": 3000,
-        "monthFeeReason": "DECEMBER",
-        "estimationFor": {
-            "contactName": "Thiru",
-            "phone": "5126989118",
-            "email": "tvajjala@gmail.com",
-            "eventType": "Musical",
-            "city": "Pittsburgh",
-            "date": "2018-12-07",
-            "attendees": 500,
-            "localDate": "2018-12-07"
-        }
-    }
-}</code></pre>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="testing">Testing</h3>
 <div class="paragraph">
-<p>It contains following test cases</p>
+<p>event types</p>
 </div>
-<div class="olist arabic">
-<ol class="arabic">
+<div class="ulist">
+<ul>
 <li>
-<p>Service layer tests <code>EventServiceImplTest</code></p>
+<p>Conference</p>
 </li>
 <li>
-<p>Integration tests <code>EventPlanningApplicationTests</code></p>
+<p>Meeting</p>
 </li>
 <li>
-<p>Client layer test <code>WeatherClient</code></p>
+<p>Musical</p>
 </li>
-</ol>
+<li>
+<p>Family</p>
+</li>
+<li>
+<p>Other</p>
+</li>
+</ul>
 </div>
-</div>
-<div class="sect2">
-<h3 id="running-the-application">Running the application</h3>
-<div class="listingblock">
-<div class="title">run.sh</div>
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash"># Running the test cases from terminal
-
-./gradlew clean build test
-
-# Running the application from terminal
-
-./gradlew bootRun</code></pre>
-</div>
+<div class="paragraph">
+<p>Musical type $1000 discount should be applied</p>
 </div>
 </div>
 </div>
@@ -733,7 +591,7 @@ table.CodeRay td.code>pre{padding:0}
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-12-05 11:35:04 -05:00
+Last updated 2018-12-04 10:47:03 -05:00
 </div>
 </div>
 </body>
